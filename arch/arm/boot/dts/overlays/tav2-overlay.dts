@@ -1,0 +1,180 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2835";
+
+	fragment@0 {
+		target = <&spidev0>;
+		__overlay__ {
+			status = "disabled";
+		};
+	};
+
+	fragment@1 {
+		target = <&spidev1>;
+		__overlay__ {
+			status = "disabled";
+		};
+	};
+
+	fragment@2 {
+		target = <&spi0>;
+		__overlay__ {
+			/* needed to avoid dtc warning */
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "okay";
+
+			eth0: qca7000@0 {
+				compatible = "qca,qca7000";
+				reg = <0>; /* CE0 */
+				pinctrl-names = "default";
+				pinctrl-0 = <&eth0_pins>;
+				interrupt-parent = <&gpio>;
+				interrupts = <23 0x1>; /* rising edge */
+				spi-max-frequency = <12000000>;
+				status = "okay";
+			};
+
+			eth1: qca7000@1 {
+				compatible = "qca,qca7000";
+				reg = <1>; /* CE1 */
+				pinctrl-names = "default";
+				pinctrl-0 = <&eth1_pins>;
+				interrupt-parent = <&gpio>;
+				interrupts = <24 0x1>; /* rising edge */
+				spi-max-frequency = <12000000>;
+				status = "okay";
+			};
+		};
+	};
+
+	fragment@3 {
+		target = <&gpio>;
+		__overlay__ {
+			eth0_pins: eth0_pins {
+				brcm,pins = <23>;
+				brcm,function = <0>; /* in */
+				brcm,pull = <0>; /* none */
+			};
+
+			eth1_pins: eth1_pins {
+				brcm,pins = <24>;
+				brcm,function = <0>; /* in */
+				brcm,pull = <0>; /* none */
+			};
+
+			spi1_pins: spi1_pins {
+				brcm,pins = <19 20 21>;
+				brcm,function = <3>; /* alt4 */
+			};
+
+			spi1_cs_pins: spi1_cs_pins {
+				brcm,pins = <18>;
+				brcm,function = <1>; /* output */
+			};
+
+			uart0_pins: uart0_pins {
+				brcm,pins = <14 15>;
+				brcm,function = <4>; /* alt0 */
+				brcm,pull = <0 2>;
+			};
+
+			pwm_pins: pwm_pins {
+				brcm,pins = <12>;
+				brcm,function = <4>; /* alt0 */
+			};
+		};
+	};
+
+	fragment@4 {
+		target = <&usb>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		dwc2_usb: __overlay__ {
+			compatible = "brcm,bcm2835-usb";
+			dr_mode = "peripheral";
+			g-np-tx-fifo-size = <32>;
+			g-rx-fifo-size = <558>;
+			g-tx-fifo-size = <512 512 512 512 512 256 256>;
+			status = "okay";
+		};
+	};
+
+	fragment@5 {
+		target = <&act_led>;
+		__overlay__ {
+			linux,default-trigger = "heartbeat";
+		};
+	};
+
+	fragment@6 {
+		target = <&pwm>;
+		__overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&pwm_pins>;
+			assigned-clock-rates = <100000000>;
+			status = "okay";
+		};
+	};
+
+	fragment@7 {
+		target-path = "/";
+		__overlay__ {
+			pwmleds {
+				compatible = "pwm-leds";
+				status {
+					label = "status";
+					pwms = <&pwm 0 5000>;
+					max-brightness = <255>;
+					linux,default-trigger = "timer";
+				};
+			};
+		};
+	};
+
+	fragment@8 {
+		target = <&uart0>;
+		__overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <&uart0_pins>;
+			status = "okay";
+		};
+	};
+
+	fragment@9 {
+		target-path = "/aliases";
+		__overlay__ {
+			serial0 = "/soc/serial@7e201000";
+			serial1 = "/soc/serial@7e215040";
+		};
+	};
+
+    fragment@10 {
+		target = <&i2c0>;
+		__overlay__ {
+			clock-frequency = <400000>;
+
+			eeprom@50 {
+				compatible = "atmel,24c64";
+				reg = <0x50>;
+				pagesize = <32>;
+			};
+		};
+	};
+
+	fragment@11 {
+		target = <&i2c0if>;
+		__overlay__ {
+			status = "okay";
+		};
+	};
+
+	fragment@12 {
+		target = <&i2c0mux>;
+		__overlay__ {
+			status = "okay";
+		};
+	};
+};
