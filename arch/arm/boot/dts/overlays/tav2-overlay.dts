@@ -85,6 +85,12 @@
 				brcm,pins = <12>;
 				brcm,function = <4>; /* alt0 */
 			};
+
+			button_pins: button_pins {
+				brcm,pins = <19>;
+				brcm,function = <0>; /* input */
+				brcm,pull = <2>; /* pull-up */
+			};
 		};
 	};
 
@@ -175,6 +181,24 @@
 		target = <&i2c0mux>;
 		__overlay__ {
 			status = "okay";
+		};
+	};
+
+	fragment@13 {
+		target-path = "/";
+		__overlay__ {
+			button: button@0 {
+				compatible = "gpio-keys";
+				pinctrl-names = "default";
+				pinctrl-0 = <&button_pins>;
+				status = "okay";
+
+				key: key {
+					linux,code = <28>;
+					gpios = <&gpio 19 1>;
+					label = "Enter";
+				};
+			};
 		};
 	};
 };
