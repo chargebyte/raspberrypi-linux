@@ -81,13 +81,8 @@
 				brcm,pull = <0 2>;
 			};
 
-			pwm_pins: pwm_pins {
-				brcm,pins = <12>;
-				brcm,function = <4>; /* alt0 */
-			};
-
 			button_pins: button_pins {
-				brcm,pins = <19>;
+				brcm,pins = <12>;
 				brcm,function = <0>; /* input */
 				brcm,pull = <2>; /* pull-up */
 			};
@@ -116,31 +111,6 @@
 	};
 
 	fragment@6 {
-		target = <&pwm>;
-		__overlay__ {
-			pinctrl-names = "default";
-			pinctrl-0 = <&pwm_pins>;
-			assigned-clock-rates = <100000000>;
-			status = "okay";
-		};
-	};
-
-	fragment@7 {
-		target-path = "/";
-		__overlay__ {
-			pwmleds {
-				compatible = "pwm-leds";
-				status {
-					label = "status";
-					pwms = <&pwm 0 5000>;
-					max-brightness = <255>;
-					linux,default-trigger = "timer";
-				};
-			};
-		};
-	};
-
-	fragment@8 {
 		target = <&uart0>;
 		__overlay__ {
 			pinctrl-names = "default";
@@ -149,7 +119,7 @@
 		};
 	};
 
-	fragment@9 {
+	fragment@7 {
 		target-path = "/aliases";
 		__overlay__ {
 			serial0 = "/soc/serial@7e201000";
@@ -157,7 +127,7 @@
 		};
 	};
 
-    fragment@10 {
+	fragment@8 {
 		target = <&i2c0>;
 		__overlay__ {
 			clock-frequency = <400000>;
@@ -170,21 +140,21 @@
 		};
 	};
 
-	fragment@11 {
+	fragment@9 {
 		target = <&i2c0if>;
 		__overlay__ {
 			status = "okay";
 		};
 	};
 
-	fragment@12 {
+	fragment@10 {
 		target = <&i2c0mux>;
 		__overlay__ {
 			status = "okay";
 		};
 	};
 
-	fragment@13 {
+	fragment@11 {
 		target-path = "/";
 		__overlay__ {
 			button: button@0 {
@@ -195,7 +165,7 @@
 
 				key: key {
 					linux,code = <28>;
-					gpios = <&gpio 19 1>;
+					gpios = <&gpio 12 1>;
 					label = "Enter";
 				};
 			};
