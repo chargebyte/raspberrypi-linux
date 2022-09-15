@@ -211,6 +211,7 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
 	superaudioboard.dtbo \
 	sx150x.dtbo \
 	tav2.dtbo \
+	tav2-24c512.dtbo \
 	tc358743.dtbo \
 	tc358743-audio.dtbo \
 	tinylcd35.dtbo \
