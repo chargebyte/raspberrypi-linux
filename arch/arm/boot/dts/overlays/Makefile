@@ -161,6 +161,8 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
 	mlx90640.dtbo \
 	mmc.dtbo \
 	mpu6050.dtbo \
+	mse1021-eth1.dtbo \
+	mse1021-eth2.dtbo \
 	mz61581.dtbo \
 	ov2311.dtbo \
 	ov5647.dtbo \
